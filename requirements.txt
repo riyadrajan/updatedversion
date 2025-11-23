@@ -1,0 +1,9 @@
+numpy
+opencv-python
+mediapipe
+Flask
+firebase-admin
+google-cloud-firestore
+python-dotenv
+ultralytics>=8.0.0
+requests

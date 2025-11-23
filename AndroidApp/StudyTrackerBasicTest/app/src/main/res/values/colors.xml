@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Primary Theme - Green -->
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_light">#81C784</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="green_accent">#E8F5E9</color>
+    
+    <!-- Background Colors -->
+    <color name="background_white">#FFFFFF</color>
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_gray">#F5F5F5</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#666666</color>
+    <color name="text_hint">#999999</color>
+    
+    <!-- Accent Colors -->
+    <color name="red_primary">#E53935</color>
+    <color name="red_pressed">#C62828</color>
+    <color name="blue_primary">#2196F3</color>
+    <color name="orange_primary">#FF9800</color>
+    <color name="purple_primary">#9C27B0</color>
+    
+    <!-- Legacy -->
+    <color name="purple">#8692f7</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="gray">#808080</color>
+    <color name="purple_500">#6A1B9A</color>
+    <color name="teal_700">#00796B</color>
+    <color name="deep_sea_blue">#005788</color>
+</resources>

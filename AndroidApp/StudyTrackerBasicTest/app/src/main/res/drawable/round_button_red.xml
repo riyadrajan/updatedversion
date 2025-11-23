@@ -1,0 +1,14 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="#99D32F2F"/> <!-- darker red when pressed -->
+            <size android:width="180dp" android:height="180dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#1AD32F2F"/> <!-- low opacity red -->
+            <size android:width="180dp" android:height="180dp"/>
+        </shape>
+    </item>
+</selector>

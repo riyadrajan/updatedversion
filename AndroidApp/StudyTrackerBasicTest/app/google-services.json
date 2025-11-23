@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "676857919723",
+    "project_id": "studyfocustrackerdb",
+    "storage_bucket": "studyfocustrackerdb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676857919723:android:94d175c19c17b2fe5ea6ae",
+        "android_client_info": {
+          "package_name": "com.example.studytrackerbasictest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtAJqh69BGlLfl04HVvMx7cw4GUebqvKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

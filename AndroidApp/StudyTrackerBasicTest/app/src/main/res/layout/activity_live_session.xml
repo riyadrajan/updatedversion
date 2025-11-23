@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#181818"
+    android:padding="24dp">
+
+    <!-- Session Time -->
+    <TextView
+        android:id="@+id/sessionTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Session Time: 00:00"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <!-- Focus Ring with Score in Center -->
+    <RelativeLayout
+        android:id="@+id/focusRingContainer"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/sessionTimeText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/focusRing"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/focusScoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="100"
+            android:textColor="@color/white"
+            android:textSize="72sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <!-- Focused Streak -->
+    <TextView
+        android:id="@+id/focusedStreakText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/focusRingContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Current Focused Streak: 0 min"
+        android:textColor="#4CAF50"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Today's Total -->
+    <TextView
+        android:id="@+id/todayTotalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/focusedStreakText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="Today's Total: 0h 0m"
+        android:textColor="#AAAAAA"
+        android:textSize="16sp" />
+
+    <!-- Control Buttons -->
+    <LinearLayout
+        android:id="@+id/controlButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/todayTotalText"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/pauseBtn"
+            android:layout_width="140dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/deep_sea_blue"
+            android:text="Pause"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/endBtn"
+            android:layout_width="140dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="12dp"
+            android:backgroundTint="@color/red_primary"
+            android:text="End Session"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Distraction Warning Overlay -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/distractionWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="32dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#FF5252"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <TextView
+                android:id="@+id/warningText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="⚠️ FOCUS!\nYou're looking away from your work.\nGet back to studying!"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
