@@ -113,13 +113,13 @@
 **Content:**
 **YOLOv8 Object Detection:**
 - Detects 7 study-related objects:
-  - 📚 Books
-  - 📱 Cell phones
-  - 💻 Laptops
-  - ⌨️ Keyboards
-  - 🖱️ Mouse
-  - 🍶 Bottles
-  - ☕ Cups
+  - Books
+  - Cell phones
+  -  Laptops
+  - Keyboards
+  -  Mouse
+  -  Bottles
+  - Cups
 
 **Why This Matters:**
 - **Before:** Looking down = always distracted
