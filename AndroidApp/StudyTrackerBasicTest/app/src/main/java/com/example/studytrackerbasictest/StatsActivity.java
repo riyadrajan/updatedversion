@@ -208,7 +208,7 @@ public class StatsActivity extends AppCompatActivity {
 
             Object fs = session.get("focusScore");
             if (fs != null) {
-                totalFocus += ((Number) fs).doubleValue() * 100;
+                totalFocus += ((Number) fs).doubleValue() ;
                 focusCount++;
             }
         }

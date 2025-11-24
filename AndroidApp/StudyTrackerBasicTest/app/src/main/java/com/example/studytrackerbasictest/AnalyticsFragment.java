@@ -8,28 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.studytrackerbasictest.databases.SessionDatabase;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.material.tabs.TabLayout;
 
 import java.text.SimpleDateFormat;
@@ -40,14 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class AnalyticsFragment extends Fragment {
 
     private TabLayout timePeriodTabs;
     private TextView avgFocusScore, streakDays, totalSessions, totalHours;
-    private BarChart peakFocusChart;
-    private PieChart distractionBreakdown;
-    private ExpandableListView recentSessionsList;
+    // Charts removed (views commented out in layout)
+    private ListView recentSessionsList;
+    private ArrayAdapter<String> recentAdapter;
     
     private String username;
     private String currentPeriod = "today";
@@ -59,7 +45,6 @@ public class AnalyticsFragment extends Fragment {
 
         initViews(v);
         setupTabs();
-        setupCharts();
 
         // Get username
         username = getActivity().getIntent().getStringExtra("username");
@@ -79,9 +64,11 @@ public class AnalyticsFragment extends Fragment {
         streakDays = v.findViewById(R.id.streakDays);
         totalSessions = v.findViewById(R.id.totalSessions);
         totalHours = v.findViewById(R.id.totalHours);
-        peakFocusChart = v.findViewById(R.id.peakFocusChart);
-        distractionBreakdown = v.findViewById(R.id.distractionBreakdown);
+        // chart views removed from layout; do not initialize them
         recentSessionsList = v.findViewById(R.id.recentSessionsList);
+        // initialize adapter to show sessions as "Session N — YYYY-MM-DD — Focus X%"
+        recentAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, new ArrayList<>());
+        recentSessionsList.setAdapter(recentAdapter);
     }
 
     private void setupTabs() {
@@ -113,53 +100,7 @@ public class AnalyticsFragment extends Fragment {
         }
     }
 
-    private void setupCharts() {
-        // Peak Focus Time Chart
-        peakFocusChart.getDescription().setEnabled(false);
-        peakFocusChart.setDrawGridBackground(false);
-        peakFocusChart.setDrawBarShadow(false);
-        peakFocusChart.setDrawValueAboveBar(false);
-        peakFocusChart.setPinchZoom(false);
-        peakFocusChart.setScaleEnabled(false);
-        
-        XAxis xAxis = peakFocusChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setDrawGridLines(false);
-        xAxis.setGranularity(1f);
-        xAxis.setTextColor(Color.parseColor("#666666"));
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                int group = (int) value;
-                switch (group) {
-                    case 0: return "12-3am";
-                    case 1: return "4-7am";
-                    case 2: return "8-11am";
-                    case 3: return "12-3pm";
-                    case 4: return "4-7pm";
-                    case 5: return "8-11pm";
-                    default: return "";
-                }
-            }
-        });
-
-        peakFocusChart.getAxisLeft().setTextColor(Color.parseColor("#666666"));
-        peakFocusChart.getAxisLeft().setAxisMinimum(0f);
-        peakFocusChart.getAxisLeft().setAxisMaximum(100f);
-        peakFocusChart.getAxisRight().setEnabled(false);
-        peakFocusChart.getLegend().setEnabled(false);
-
-        // Distraction Breakdown Pie Chart
-        distractionBreakdown.setUsePercentValues(true);
-        distractionBreakdown.getDescription().setEnabled(false);
-        distractionBreakdown.setDrawHoleEnabled(true);
-        distractionBreakdown.setHoleRadius(40f);
-        distractionBreakdown.setTransparentCircleRadius(45f);
-        distractionBreakdown.setDrawEntryLabels(true);
-        distractionBreakdown.setEntryLabelColor(Color.parseColor("#666666"));
-        distractionBreakdown.setEntryLabelTextSize(12f);
-        distractionBreakdown.getLegend().setTextColor(Color.parseColor("#666666"));
-    }
+    // Charts removed: setupCharts is intentionally omitted because chart views are commented out in layout
 
     private void loadStats(String period) {
         currentPeriod = period;
@@ -171,8 +112,6 @@ public class AnalyticsFragment extends Fragment {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     calculateAndDisplayStats(filteredSessions);
-                    updatePeakFocusChart(filteredSessions);
-                    updateDistractionBreakdown(filteredSessions);
                     updateRecentSessions(sessions);
                 });
             }
@@ -243,133 +182,21 @@ public class AnalyticsFragment extends Fragment {
         totalHours.setText(hours + "h");
     }
 
-    private void updatePeakFocusChart(List<Map<String, Object>> sessions) {
-        List<BarEntry> entries = new ArrayList<>();
-        
-        // Check if we have valid focus score data
-        boolean hasValidFocusData = false;
-        if (!sessions.isEmpty()) {
-            for (Map<String, Object> session : sessions) {
-                Object fs = session.get("focusScore");
-                if (fs != null) {
-                    hasValidFocusData = true;
-                    break;
-                }
-            }
-        }
-        
-        // Show demo data if no sessions OR if focus scores are N/A
-        if (!hasValidFocusData) {
-            // Demo data - always visible when focus score is N/A
-            float[] demoScores = {45, 60, 78, 85, 82, 65};
-            for (int i = 0; i < 6; i++) {
-                entries.add(new BarEntry(i, demoScores[i]));
-            }
-        } else {
-            // Group real data into 4-hour blocks
-            Map<Integer, List<Double>> groupedFocus = new HashMap<>();
-            for (Map<String, Object> session : sessions) {
-                int hour = (int) (Math.random() * 24);
-                int group = hour / 4; // 0-5 representing 6 groups
-                Object fs = session.get("focusScore");
-                if (fs != null) {
-                    double score = ((Number) fs).doubleValue();
-                    if (!groupedFocus.containsKey(group)) {
-                        groupedFocus.put(group, new ArrayList<>());
-                    }
-                    groupedFocus.get(group).add(score);
-                }
-            }
+    // updatePeakFocusChart removed
 
-            for (int group = 0; group < 6; group++) {
-                if (groupedFocus.containsKey(group)) {
-                    List<Double> scores = groupedFocus.get(group);
-                    double avg = scores.stream().mapToDouble(Double::doubleValue).average().orElse(0);
-                    entries.add(new BarEntry(group, (float) avg));
-                } else {
-                    entries.add(new BarEntry(group, 0f));
-                }
-            }
-        }
-
-        BarDataSet dataSet = new BarDataSet(entries, "Focus Score");
-        dataSet.setColor(Color.parseColor("#FF9800")); // Orange color
-        dataSet.setValueTextColor(Color.parseColor("#666666"));
-        dataSet.setValueTextSize(0f);
-
-        BarData data = new BarData(dataSet);
-        data.setBarWidth(0.9f); // Wider bars
-        peakFocusChart.setData(data);
-        peakFocusChart.invalidate();
-    }
-
-    private void updateDistractionBreakdown(List<Map<String, Object>> sessions) {
-        int eyesClosed, lookingAway, phone;
-        
-        // Always show demo data for new users
-        if (sessions.isEmpty()) {
-            eyesClosed = 15;
-            lookingAway = 28;
-            phone = 12;
-        } else {
-            eyesClosed = (int) (Math.random() * 20);
-            lookingAway = (int) (Math.random() * 30);
-            phone = (int) (Math.random() * 15);
-        }
-
-        List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(eyesClosed, "Eyes Closed"));
-        entries.add(new PieEntry(lookingAway, "Looking Away"));
-        entries.add(new PieEntry(phone, "Phone"));
-
-        PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setColors(
-            Color.parseColor("#FF5252"),
-            Color.parseColor("#FF9800"),
-            Color.parseColor("#FFC107")
-        );
-        dataSet.setValueTextColor(Color.parseColor("#666666"));
-        dataSet.setValueTextSize(14f);
-
-        PieData data = new PieData(dataSet);
-        distractionBreakdown.setData(data);
-        distractionBreakdown.invalidate();
-    }
+    // updateDistractionBreakdown removed
 
     private void updateRecentSessions(List<Map<String, Object>> sessions) {
-        List<Map<String, String>> groupData = new ArrayList<>();
-        List<List<Map<String, String>>> childData = new ArrayList<>();
-
-        // Take last 10 sessions
-        int count = Math.min(sessions.size(), 10);
-        for (int i = 0; i < count; i++) {
-            Map<String, Object> session = sessions.get(i);
-            
-            Map<String, String> group = new HashMap<>();
-            group.put("title", (String) session.get("date") + " - " + session.get("duration"));
-            groupData.add(group);
-
-            List<Map<String, String>> children = new ArrayList<>();
-            Map<String, String> child = new HashMap<>();
+        // sessions are expected ordered by date desc from the DB
+        recentAdapter.clear();
+        for (Map<String, Object> session : sessions) {
+            String name = session.get("name") != null ? (String) session.get("name") : "Session";
+            String date = session.get("date") != null ? (String) session.get("date") : "";
             Object fs = session.get("focusScore");
-            String focusStr = fs != null ? 
-                String.format(Locale.getDefault(), "%.0f%%", ((Number) fs).doubleValue()) : "N/A";
-            child.put("details", "Focus Score: " + focusStr);
-            children.add(child);
-            childData.add(children);
+            String fsStr = fs != null ? String.format(Locale.getDefault(), "%.0f%%", ((Number) fs).doubleValue()) : "N/A";
+            String item = String.format(Locale.getDefault(), "%s — %s — Focus %s", name, date, fsStr);
+            recentAdapter.add(item);
         }
-
-        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
-            requireContext(),
-            groupData,
-            android.R.layout.simple_expandable_list_item_1,
-            new String[]{"title"},
-            new int[]{android.R.id.text1},
-            childData,
-            android.R.layout.simple_expandable_list_item_1,
-            new String[]{"details"},
-            new int[]{android.R.id.text1}
-        );
-        recentSessionsList.setAdapter(adapter);
+        recentAdapter.notifyDataSetChanged();
     }
 }
