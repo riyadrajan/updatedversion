@@ -85,6 +85,10 @@ if not os.path.isabs(_key_from_env):
 else:
     SERVICE_ACCOUNT_KEY_PATH = _key_from_env
 
+# Configurable error margin (milliseconds) added to each distracted interval duration.
+# Default set to 3000 ms (3 seconds). Override with env var DISTRACTED_COUNTER_ERROR_MS.
+DISTRACTED_COUNTER_ERROR_MS = int(os.getenv("DISTRACTED_COUNTER_ERROR_MS", "3000"))
+
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
@@ -265,6 +269,9 @@ class SessionServerStore:
 
         # Compute duration and next idx
         duration_ms = int((end_at - start_at).total_seconds() * 1000)
+        # Apply configured error margin to account for detection latency (if any)
+        if DISTRACTED_COUNTER_ERROR_MS:
+            duration_ms = int(duration_ms + DISTRACTED_COUNTER_ERROR_MS)
         idx = int(data.get("intervalCount", 0) or 0) + 1
 
         # Get activity and severity from current interval
