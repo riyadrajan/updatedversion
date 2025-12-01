@@ -22,6 +22,9 @@ Enhanced Detection → Flask Server → WebSocket → ESP32/Hardware
 
 ```bash
 cd StateDetectionLogic
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 PORT=3000 python -m driver_state_detection.server
 ```
 
