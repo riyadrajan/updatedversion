@@ -39,3 +39,4 @@ captures/
 # OS
 .DS_Store
 Thumbs.db
+StateDetectionLogic/.env
