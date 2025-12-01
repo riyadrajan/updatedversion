@@ -28,6 +28,7 @@ ipconfig getifaddr en0
 ```
 ## Running Flask in Python (Updated Version with Object Detection)
 - From root directory, navigate to the StateDetectionLogic directory
+- Create a .env file within the StateDetectionLogic using the .env example file, and add firebase key path
 ```bash
 cd StateDetectionLogic
 python3 -m venv .venv
